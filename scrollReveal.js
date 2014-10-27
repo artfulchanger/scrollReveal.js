@@ -500,14 +500,16 @@ window.scrollReveal = (function( window ) {
 
     isElemInViewport: function( elem ) {
 
-      var elHeight = elem.domEl.offsetHeight
-        , elTop    = self.getOffset( elem.domEl ).top
-        , elBottom = elTop + elHeight
-        , vFactor  = elem.config.vFactor || 0
+        // http://stackoverflow.com/questions/26309675/reveal-svg-animation-on-scroll
+        var rect = elem.domEl.getBoundingClientRect();
 
-      return ( elTop + elHeight * vFactor < self.scrolled + self.getViewportH() )
-          && ( elBottom - elHeight * vFactor > self.scrolled )
-          || ( elem.domEl.currentStyle ? elem.domEl.currentStyle : window.getComputedStyle( elem.domEl, null ) ).position == 'fixed'
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && // or $(window).height()
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth) // or $(window).width()
+        );
+        
     },
 
     isMobile: function() {
